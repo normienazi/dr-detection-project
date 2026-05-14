@@ -1,0 +1,11 @@
+Classification Report - Binary DR Detection
+=============================================
+
+              precision    recall  f1-score   support
+
+          DR       0.96      0.95      0.95       371
+       No_DR       0.95      0.96      0.95       361
+
+    accuracy                           0.95       732
+   macro avg       0.95      0.95      0.95       732
+weighted avg       0.95      0.95      0.95       732
