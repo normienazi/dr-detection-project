@@ -102,25 +102,44 @@ The Grad-CAM output is saved in:
 
 ```text
 results/gradcam_output.png
-FPGA / HLS Acceleration
+```
+
+---
+
+## FPGA / HLS Acceleration
 
 A 3×3 convolution accelerator was implemented in C++ for FPGA deployment using Vitis HLS. Since convolution is one of the most computationally intensive operations in CNN-based image processing, this module represents the hardware acceleration component of the system.
 
 The accelerator accepts a 224 × 224 grayscale image and applies a 3 × 3 convolution kernel to generate a 222 × 222 output feature map.
+
+### HLS Files
+
+```text
 hls/
 ├── conv2d_accelerator.cpp
 ├── conv2d_accelerator.h
 └── testbench.cpp
-HLS C++ Simulation
+```
+
+### HLS C++ Simulation
 
 A C++ testbench was created using an artificial edge image. The convolution output around the edge region was:
-0 -3 3 0 0 0 0 0
-0 -3 3 0 0 0 0 0
-0 -3 3 0 0 0 0 0
-0 -3 3 0 0 0 0 0
-0 -3 3 0 0 0 0 0
 
+```text
+0 -3 3 0 0 0 0 0
+0 -3 3 0 0 0 0 0
+0 -3 3 0 0 0 0 0
+0 -3 3 0 0 0 0 0
+0 -3 3 0 0 0 0 0
+```
 
+This confirms that the convolution accelerator successfully detects edge transitions in the input image.
+
+---
+
+## Project Structure
+
+```text
 dr_detection_project/
 ├── src/
 │   ├── train_binary.py
@@ -142,3 +161,106 @@ dr_detection_project/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+```
+
+---
+
+## How to Run
+
+### 1. Create and activate virtual environment
+
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+```
+
+### 2. Install dependencies
+
+```powershell
+pip install -r requirements.txt
+```
+
+### 3. Train the model
+
+```powershell
+python src/train_binary.py
+```
+
+### 4. Evaluate the model
+
+```powershell
+python src/evaluate.py
+```
+
+### 5. Run prediction on a single image
+
+```powershell
+python src/predict.py "path_to_image"
+```
+
+### 6. Run Grad-CAM
+
+```powershell
+python src/gradcam.py "path_to_image"
+```
+
+### 7. Compile and run HLS C++ simulation
+
+```powershell
+D:\C-C++\ucrt64\bin\g++.exe -fno-lto hls\testbench.cpp hls\conv2d_accelerator.cpp -o hls\conv_test.exe
+.\hls\conv_test.exe
+```
+
+---
+
+## Results Files
+
+The generated result files are stored in the `results/` directory:
+
+```text
+results/
+├── confusion_matrix.png
+├── evaluation_report.txt
+└── gradcam_output.png
+```
+
+---
+
+## Future Work
+
+- Perform full Vitis HLS synthesis
+- Generate RTL/IP from the convolution accelerator
+- Integrate the accelerator with a Zynq-based FPGA design
+- Deploy inference on PYNQ-Z2 or Zybo Z7-20
+- Compare CPU inference time with FPGA-accelerated inference
+- Extend the model to multi-class DR severity classification
+
+---
+
+## Technologies Used
+
+- Python
+- TensorFlow / Keras
+- OpenCV
+- NumPy
+- Matplotlib
+- Scikit-learn
+- C++
+- Vitis HLS
+- FPGA / Zynq SoC
+
+---
+
+## Project Status
+
+Current status:
+
+- CNN model trained successfully
+- Binary DR classification implemented
+- Evaluation metrics generated
+- Confusion matrix generated
+- Grad-CAM explainability implemented
+- HLS convolution accelerator implemented
+- C++ simulation of accelerator verified
+
+Further work will focus on Vitis HLS synthesis and FPGA integration.
